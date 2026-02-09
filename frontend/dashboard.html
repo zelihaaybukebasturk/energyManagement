@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - 3GEN Energy</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #111827 0%, #020617 55%, #020617 100%);
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: radial-gradient(circle at top left, #22c55e33, #0b1120 40%, #1e293b 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(148,163,184,0.35);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .navbar-brand {
+            font-size: 1.35em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand span.logo-pill {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0%, #4ade80, #22c55e, #22d3ee);
+            box-shadow: 0 0 25px rgba(45,212,191,0.7);
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: rgba(248,250,252,0.95);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.85));
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-size: 0.9em;
+        }
+
+        .nav-link:hover {
+            background: radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.9));
+            border-color: rgba(94,234,212,0.8);
+            box-shadow: 0 0 18px rgba(56,189,248,0.45);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: rgba(226,232,240,0.95);
+        }
+
+        .btn-logout {
+            background: rgba(15,23,42,0.8);
+            border: 1px solid rgba(148,163,184,0.6);
+            color: #e5e7eb;
+            padding: 8px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-logout:hover {
+            background: radial-gradient(circle at top, rgba(248,113,113,0.35), rgba(15,23,42,0.95));
+            border-color: rgba(248,113,113,0.9);
+            box-shadow: 0 0 18px rgba(248,113,113,0.45);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 28px 22px 40px;
+        }
+
+        .welcome-section {
+            position: relative;
+            background: radial-gradient(circle at top left, rgba(94,234,212,0.12), rgba(15,23,42,0.95));
+            border-radius: 24px;
+            padding: 26px 26px 22px;
+            margin-bottom: 22px;
+            box-shadow:
+                0 32px 80px rgba(15,23,42,0.75),
+                0 0 0 1px rgba(148,163,184,0.35);
+            overflow: hidden;
+        }
+
+        .welcome-section h1 {
+            color: #e5e7eb;
+            font-size: 1.9em;
+            margin-bottom: 10px;
+        }
+
+        .welcome-section p {
+            color: rgba(226,232,240,0.9);
+            font-size: 0.98em;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section .card {
+            width: 100%;
+        }
+
+        .main-content {
+            margin-bottom: 30px;
+        }
+
+        .results-section {
+            width: 100%;
+        }
+
+        .card {
+            position: relative;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.96), #020617);
+            border-radius: 22px;
+            padding: 24px 22px 22px;
+            box-shadow:
+                0 26px 80px rgba(15,23,42,0.95),
+                0 0 0 1px rgba(30,64,175,0.55);
+            border: 1px solid rgba(15,23,42,0.9);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at top, rgba(96,165,250,0.32), transparent 60%);
+            opacity: 0.28;
+            pointer-events: none;
+        }
+
+        .card > * {
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 32px 90px rgba(15,23,42,0.98),
+                0 0 0 1px rgba(56,189,248,0.9);
+            border-color: rgba(56,189,248,0.9);
+        }
+
+        .card.results-section.active {
+            animation: cardFadeIn 0.4s ease-out;
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card h2 {
+            color: #e5e7eb;
+            margin-bottom: 20px;
+            font-size: 1.12em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Daha kompakt için 180px */
+            gap: 15px; /* Daha küçük boşluk */
+        }
+
+        .subsection {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px dashed #e5e7eb;
+        }
+
+        .subsection h3 {
+            color: #1f2937;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+        }
+
+        .whatif-panel {
+            display: none;
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 14px;
+            border: 2px solid #e2e8f0;
+            background: linear-gradient(145deg, #0b1220 0%, #0f172a 100%);
+            color: #e5e7eb;
+        }
+
+        .whatif-panel.active { display: block; }
+
+        .whatif-panel h3 {
+            color: #e5e7eb;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .whatif-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .whatif-option {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
+            cursor: pointer;
+        }
+
+        .whatif-option:hover { background: rgba(255,255,255,0.10); }
+        .whatif-option input { margin-top: 4px; }
+
+        .whatif-title { font-weight: 800; }
+        .whatif-sub { font-size: 0.9em; color: rgba(229,231,235,0.85); margin-top: 2px; }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 13px;
+            background: rgba(255,255,255,0.10);
+            color: #e5e7eb;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover { background: rgba(255,255,255,0.16); }
+
+        .btn-secondary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid rgba(51,65,85,0.9);
+            border-radius: 999px;
+            font-size: 0.95em;
+            transition: all 0.2s;
+            background: rgba(15,23,42,0.9);
+            color: #e5e7eb;
+        }
+
+        .form-group select option {
+            background: #1e293b; /* Koyu tema için arka plan */
+            color: #1a202c; /* Koyu renk metin */
+        }
+
+        .form-group input::placeholder {
+            color: rgba(148,163,184,0.85);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: rgba(94,234,212,0.9);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.9),
+                0 0 22px rgba(56,189,248,0.6);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.98), #020617);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #22c55e 0%, #22d3ee 40%, #818cf8 100%);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            font-size: 1.02em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.18s, filter 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 10% 0%, rgba(248,250,252,0.35), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.8),
+                0 22px 65px rgba(56,189,248,0.9);
+            filter: brightness(1.02);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 0.8;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results-section {
+            display: none;
+            width: 100%;
+        }
+
+        .results-section.active {
+            display: block;
+            width: 100%;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 700px;
+            height: 320px;
+            margin: 24px 0;
+            padding: 20px;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+            border-radius: 16px;
+            border: 1px solid rgba(51,65,85,0.95);
+            box-shadow: 0 2px 12px rgba(15,23,42,0.5);
+        }
+
+        .chart-container h4 {
+            margin-bottom: 16px;
+            color: #e5e7eb;
+            font-size: 1.05em;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .efficiency-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.15em;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            animation: badgeAppear 0.5s ease-out;
+        }
+
+        .efficiency-badge::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+        }
+
+        .efficiency-badge.efficient {
+            background: linear-gradient(135deg, #00c853 0%, #00a843 100%);
+            color: white;
+        }
+
+        .efficiency-badge.moderately_efficient {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+
+        .efficiency-badge.inefficient {
+            background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        @keyframes badgeAppear {
+            from { opacity: 0; transform: scale(0.9) translateY(-10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 22px 18px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #e8ecf1;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 2.1em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .kpi-card .kpi-label {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .kpi-card .kpi-sublabel {
+            font-size: 0.72em;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .explanation-section {
+            margin-top: 28px;
+        }
+
+        .explanation-section h3 {
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-size: 1.25em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .explanation-content,
+        .recommendations-content {
+            padding: 28px;
+            border-radius: 16px;
+            line-height: 1.85;
+            color: #374151;
+            font-size: 0.98em;
+        }
+
+        .explanation-content {
+            background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .explanation-content h4,
+        .recommendations-content h4 {
+            color: #1e293b;
+            margin: 1em 0 0.5em;
+            font-size: 1.05em;
+        }
+
+        .explanation-content h4:first-child,
+        .recommendations-content h4:first-child {
+            margin-top: 0;
+        }
+
+        .explanation-content p,
+        .recommendations-content p {
+            margin: 0.6em 0;
+        }
+
+        .explanation-content strong,
+        .recommendations-content strong {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .explanation-content ul,
+        .recommendations-content ul {
+            margin: 0.6em 0;
+            padding-left: 1.5em;
+        }
+
+        .explanation-content li,
+        .recommendations-content li {
+            margin: 0.35em 0;
+        }
+
+        .recommendations-content {
+            background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #a7f3d0;
+            border-left: 5px solid #059669;
+            margin-top: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #38bdf8;
+            font-size: 1.05em;
+        }
+
+        .loading-sub {
+            font-size: 0.9em;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        .llm-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);
+            color: #667eea;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .btn-new-analysis {
+            margin-top: 24px;
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-new-analysis:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .results-summary {
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(51,65,85,0.95);
+        }
+
+        .results-summary h3 {
+            font-size: 1em;
+            color: #cbd5f5;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .collapsible-section {
+            margin-top: 20px;
+        }
+
+        .collapsible-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid rgba(51,65,85,0.95);
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .collapsible-header:hover {
+            border-color: rgba(56,189,248,0.9);
+            background: radial-gradient(circle at top left, rgba(15,23,42,1), #020617);
+        }
+
+        .collapsible-header h3 {
+            margin: 0;
+            font-size: 1.02em;
+            color: #e5e7eb;
+        }
+
+        .collapsible-header .arrow {
+            transition: transform 0.3s;
+            font-size: 1.2em;
+        }
+
+        .collapsible-header.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapsible-content.open {
+            max-height: 2000px;
+        }
+
+        .collapsible-body {
+            padding: 20px;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+            border-radius: 0 0 12px 12px;
+            border: 1px solid rgba(51,65,85,0.95);
+            border-top: none;
+            margin-top: -8px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(148,163,184,0.25);
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            width: 46px;
+            height: 46px;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(248,113,113,0.08);
+            color: #fecaca;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid rgba(248,113,113,0.95);
+        }
+
+        .benchmark-box {
+            margin-top: 28px;
+            padding: 24px;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+            border-radius: 16px;
+            border: 1px solid rgba(51,65,85,0.95);
+            box-shadow: 0 2px 12px rgba(15,23,42,0.5);
+        }
+
+        .benchmark-box strong {
+            color: #e5e7eb;
+            display: block;
+            margin-bottom: 16px;
+            font-size: 1.05em;
+        }
+
+        .benchmark-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .benchmark-row:last-child {
+            border-bottom: none;
+        }
+
+        .benchmark-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .benchmark-dot.green { background: #00c853; }
+        .benchmark-dot.orange { background: #ff9800; }
+        .benchmark-dot.red { background: #ff5252; }
+
+        .efficiency-meter {
+            margin-top: 20px;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .efficiency-meter span {
+            height: 100%;
+            transition: width 0.8s ease-out;
+        }
+
+        .efficiency-meter .bar-green { background: linear-gradient(90deg, #00c853, #00a843); }
+        .efficiency-meter .bar-orange { background: linear-gradient(90deg, #ff9800, #f57c00); }
+        .efficiency-meter .bar-red { background: linear-gradient(90deg, #ff5252, #d32f2f); }
+
+        .meter-legend {
+            font-size: 0.8em;
+            color: #64748b;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="logo-pill"></span>
+            <span>3GEN Energy</span>
+        </div>
+        <div class="navbar-user">
+            <a class="nav-link" href="simulation.html">Oda Bazlı Analiz</a>
+            <div class="user-info">
+                <span id="userName">Kullanıcı</span>
+            </div>
+            <button class="btn-logout" onclick="logout()">Çıkış</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1>Hoş Geldiniz</h1>
+            <p>Bina enerji verimliliği analizi yapmak için aşağıdaki formu doldurun.</p>
+        </div>
+
+        <div class="form-section">
+            <div class="card">
+                <h2>Bina Bilgileri</h2>
+                <form id="analysisForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="totalEnergy">Toplam Enerji Tüketimi (kWh)</label>
+                            <input type="number" id="totalEnergy" name="totalEnergy" step="0.01" required placeholder="Örn: 50000">
+                        </div>
+                        <div class="form-group">
+                            <label for="buildingArea">Bina Alanı (m²)</label>
+                            <input type="number" id="buildingArea" name="buildingArea" step="0.01" required placeholder="Örn: 2000">
+                        </div>
+                        <div class="form-group">
+                            <label for="buildingType">Bina Tipi</label>
+                            <select id="buildingType" name="buildingType" required>
+                                <option value="">Bina tipini seçin</option>
+                                <option value="school">Okul</option>
+                                <option value="university">Üniversite</option>
+                                <option value="hotel">Otel</option>
+                                <option value="residential">Konut</option>
+                                <option value="office">Ofis</option>
+                                <option value="hospital">Hastane</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="occupancy">Kullanıcı Sayısı (Opsiyonel)</label>
+                            <input type="number" id="occupancy" name="occupancy" step="1" placeholder="Örn: 100">
+                        </div>
+                        <div class="form-group">
+                            <label for="periodMonths">Ölçüm Süresi (Ay)</label>
+                            <input type="number" id="periodMonths" name="periodMonths" step="0.1" value="12" min="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Şehir (hava durumu)</label>
+                            <input type="text" id="city" name="city" placeholder="Örn: İstanbul">
+                        </div>
+                        <div class="form-group">
+                            <label for="indoorTemp">İç ortam sıcaklığı / setpoint (°C)</label>
+                            <input type="number" id="indoorTemp" name="indoorTemp" step="0.1" value="22" min="10" max="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="electricityPrice">Elektrik birim fiyatı (TL/kWh)</label>
+                            <input type="number" id="electricityPrice" name="electricityPrice" step="0.01" value="3.5" required placeholder="Örn: 3.5">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" id="analyzeBtn">Analiz Et</button>
+                </form>
+
+                <div class="whatif-panel" id="whatifPanel">
+                    <h3>Analiz Sonrası What‑if Senaryosu</h3>
+                    <div class="whatif-options" id="whatifOptions">
+                        <label class="whatif-option">
+                            <input type="radio" name="whatifScenario" value="led" checked>
+                            <div>
+                                <div class="whatif-title">LED’e geçersek?</div>
+                                <div class="whatif-sub">Aydınlatma tasarrufu + olası küçük HVAC yan faydası.</div>
+                            </div>
+                        </label>
+                        <label class="whatif-option">
+                            <input type="radio" name="whatifScenario" value="occupancy_down_20">
+                            <div>
+                                <div class="whatif-title">%20 daha az kişi olursa?</div>
+                                <div class="whatif-sub">Sabit yükler nedeniyle tüketim 1:1 düşmeyebilir.</div>
+                            </div>
+                        </label>
+                        <label class="whatif-option">
+                            <input type="radio" name="whatifScenario" value="hours_shorter">
+                            <div>
+                                <div class="whatif-title">Çalışma saatleri kısalırsa?</div>
+                                <div class="whatif-sub">Planlı yükler düşer; mesai dışı disiplin kritik.</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="form-row" id="whatifHoursRow" style="display:none;">
+                        <div class="form-group">
+                            <label for="baseHours">Mevcut çalışma saati (saat/gün)</label>
+                            <input type="number" id="baseHours" step="0.1" min="1" max="24" value="9">
+                        </div>
+                        <div class="form-group">
+                            <label for="newHours">Yeni çalışma saati (saat/gün)</label>
+                            <input type="number" id="newHours" step="0.1" min="1" max="24" value="7.2">
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-secondary" id="runWhatifBtn">Seçili Senaryoya Göre Yeniden Analiz Et</button>
+                    <div class="meter-legend" style="margin-top:10px; color: rgba(229,231,235,0.8);">
+                        What‑if, mevcut form girdilerinizi baz alır ve yeni KPI/etiketlerle “yeniden analiz” yapar.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="card results-section" id="resultsSection">
+                <h2>Analiz Sonuçları</h2>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // Check authentication
+        const token = localStorage.getItem('auth_token');
+        const demoMode = localStorage.getItem('demo_mode');
+        const username = localStorage.getItem('username') || 'Demo Kullanıcı';
+
+        if (!token && !demoMode) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userName').textContent = username;
+
+        function logout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('demo_mode');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('analysisForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                total_energy_kwh: parseFloat(document.getElementById('totalEnergy').value),
+                building_area_m2: parseFloat(document.getElementById('buildingArea').value),
+                building_type: document.getElementById('buildingType').value,
+                occupancy: document.getElementById('occupancy').value ? parseInt(document.getElementById('occupancy').value) : null,
+                period_months: parseFloat(document.getElementById('periodMonths').value) || 12.0,
+                city: (document.getElementById('city').value || '').trim() || null,
+                indoor_temp_c: document.getElementById('indoorTemp').value ? parseFloat(document.getElementById('indoorTemp').value) : 22.0,
+                electricity_price_tl_per_kwh: parseFloat(document.getElementById('electricityPrice').value || '3.5')
+            };
+
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+
+            analyzeBtn.disabled = true;
+            resultsSection.classList.add('active');
+            resultsContent.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Bina enerji verimliliği analiz ediliyor...</p>
+                    <p class="loading-sub">Analiz ve Türkçe çeviri yapılıyor</p>
+                </div>
+            `;
+
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Analiz başarısız');
+                }
+
+                const data = await response.json();
+                displayResults(data);
+                // Enable what-if panel after baseline analysis
+                window.__lastBaselineFormData = formData;
+                const whatifPanel = document.getElementById('whatifPanel');
+                if (whatifPanel) whatifPanel.classList.add('active');
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                resultsContent.innerHTML = `
+                    <div class="error">
+                        <strong>Hata:</strong> ${error.message}
+                        <br><br>
+                        Backend sunucusunun çalıştığından emin olun: ${API_BASE_URL}
+                    </div>
+                `;
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function getSelectedWhatIfScenario() {
+            const el = document.querySelector('input[name="whatifScenario"]:checked');
+            return el ? el.value : 'led';
+        }
+
+        function updateWhatIfHoursUI() {
+            const scenario = getSelectedWhatIfScenario();
+            const row = document.getElementById('whatifHoursRow');
+            if (!row) return;
+            row.style.display = scenario === 'hours_shorter' ? 'grid' : 'none';
+        }
+
+        const whatifOptions = document.getElementById('whatifOptions');
+        if (whatifOptions) {
+            whatifOptions.addEventListener('change', (e) => {
+                updateWhatIfHoursUI();
+
+                const scenario = getSelectedWhatIfScenario();
+                const baseline = window.__lastBaselineFormData;
+                // %20 daha az kişi olursa senaryosu seçildiğinde otomatik kişi sayısını düşür + analiz çalıştır
+                if (scenario === 'occupancy_down_20' && baseline && baseline.occupancy && baseline.occupancy > 0) {
+                    const newOcc = Math.max(1, Math.round(baseline.occupancy * 0.8));
+                    baseline.occupancy = newOcc;
+
+                    const occInput = document.getElementById('occupancy');
+                    if (occInput) {
+                        occInput.value = String(newOcc);
+                    }
+
+                    const runBtn = document.getElementById('runWhatifBtn');
+                    if (runBtn && !runBtn.disabled) {
+                        runBtn.click();
+                    }
+                }
+            });
+        }
+        updateWhatIfHoursUI();
+
+        document.getElementById('runWhatifBtn').addEventListener('click', async () => {
+            const baseline = window.__lastBaselineFormData;
+            if (!baseline) {
+                alert('Önce temel analizi çalıştırın.');
+                return;
+            }
+
+            const scenario = getSelectedWhatIfScenario();
+            if (scenario === 'occupancy_down_20' && (!baseline.occupancy || baseline.occupancy <= 0)) {
+                alert('"%20 daha az kişi olursa?" senaryosu için "Kullanıcı Sayısı" alanını doldurun.');
+                return;
+            }
+            const baseline_hours_per_day = document.getElementById('baseHours').value ? parseFloat(document.getElementById('baseHours').value) : 9.0;
+            const new_hours_per_day = document.getElementById('newHours').value ? parseFloat(document.getElementById('newHours').value) : (baseline_hours_per_day * 0.8);
+
+            const payload = {
+                ...baseline,
+                scenario,
+                baseline_hours_per_day,
+                new_hours_per_day: scenario === 'hours_shorter' ? new_hours_per_day : null
+            };
+
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+            const btn = document.getElementById('runWhatifBtn');
+            btn.disabled = true;
+
+            resultsSection.classList.add('active');
+            resultsContent.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>What-if senaryosuna göre yeniden analiz ediliyor...</p>
+                    <p class="loading-sub">KPI + RAG yorum + Türkçe çeviri</p>
+                </div>
+            `;
+
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const resp = await fetch(`${API_BASE_URL}/analyze/whatif`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(payload)
+                });
+
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({}));
+                    throw new Error(err.detail || 'What-if analizi başarısız');
+                }
+
+                const data = await resp.json();
+                displayWhatIfResults(data);
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                resultsContent.innerHTML = `
+                    <div class="error">
+                        <strong>Hata:</strong> ${error.message}
+                        <br><br>
+                        Backend sunucusunun çalıştığından emin olun: ${API_BASE_URL}
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        function displayWhatIfResults(payload) {
+            const { baseline, whatif, whatif_simulation, whatif_commentary } = payload;
+
+            // First render the "what-if" analysis using existing renderer
+            displayResults(whatif);
+
+            // Then prepend a compact what-if summary block + 3 scenario cards
+            const resultsContent = document.getElementById('resultsContent');
+            const delta = (whatif_simulation && whatif_simulation.delta) ? whatif_simulation.delta : {};
+            const solutions = (whatif_simulation && whatif_simulation.solutions) ? whatif_simulation.solutions : [];
+
+            const summarySentence = `Bu değişiklikler enerji tüketimini yaklaşık %${(delta.savings_percent ?? 0).toLocaleString('tr-TR', {maximumFractionDigits:2})} azaltır ve yıllık tahmini tasarruf ${(delta.annual_savings_tl_est ?? 0).toLocaleString('tr-TR', {maximumFractionDigits:0})} TL olur.`;
+
+            const cards = solutions.map(s => `
+                <div class="kpi-card" style="text-align:left;">
+                    <div class="kpi-label" style="font-weight:800; color:#111827;">${s.name}: ${s.summary}</div>
+                    <div class="kpi-sublabel" style="margin-top:8px;">
+                        Toplam: <strong>${(s.total_kwh ?? 0).toLocaleString('tr-TR', {maximumFractionDigits:1})} kWh</strong> ·
+                        Tasarruf: <strong>%${(s.savings_percent ?? 0).toLocaleString('tr-TR', {maximumFractionDigits:2})}</strong><br>
+                        Yıllık tahmin: <strong>${(s.annual_savings_tl_est ?? 0).toLocaleString('tr-TR', {maximumFractionDigits:0})} TL</strong>
+                    </div>
+                </div>
+            `).join('');
+
+            const commentaryHtml = (whatif_commentary && whatif_commentary.text) ? formatReportText(whatif_commentary.text) : '';
+            const sources = (whatif_commentary && whatif_commentary.sources_used) ? whatif_commentary.sources_used.filter(Boolean) : [];
+
+            const block = `
+                <div class="results-summary" style="border-left: 5px solid #0ea5e9;">
+                    <h3>What‑if Özeti</h3>
+                    <p style="margin:0; color:#0f172a; font-weight:700;">${summarySentence}</p>
+                    <p style="margin-top:10px; font-size:0.85em; color:#64748b;">
+                        Kaynaklar (RAG): <strong>${sources.join(', ') || '—'}</strong>
+                    </p>
+                </div>
+
+                <div class="benchmark-box" style="margin-top: 0;">
+                    <strong>3 Çözüm Senaryosu</strong>
+                    <div class="kpi-grid" style="margin-bottom: 0;">${cards || '<div class=\"kpi-card\">—</div>'}</div>
+                </div>
+
+                <div class="collapsible-section" style="margin-top: 18px;">
+                    <div class="collapsible-header open" onclick="toggleCollapse(this)">
+                        <h3>What‑if Yorum (RAG ile)</h3>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="collapsible-content open">
+                        <div class="collapsible-body">
+                            <div class="explanation-content">${commentaryHtml || '<p>—</p>'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            resultsContent.innerHTML = block + resultsContent.innerHTML;
+        }
+
+        function formatReportText(text) {
+            if (!text) return '';
+            let html = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            html = html.replace(/^## (.+)$/gm, '<h4>$1</h4>');
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            const lines = html.split('\n');
+            let out = '';
+            let inList = false;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (/^- /.test(line)) {
+                    if (!inList) { out += '<ul>'; inList = true; }
+                    out += '<li>' + line.slice(2) + '</li>';
+                } else {
+                    if (inList) { out += '</ul>'; inList = false; }
+                    if (line.trim()) out += '<p>' + line + '</p>';
+                }
+            }
+            if (inList) out += '</ul>';
+            return out.replace(/<p><h4>/g, '<h4>').replace(/<\/h4><\/p>/g, '</h4>');
+        }
+
+        function displayResults(data) {
+            const { kpis, efficiency_evaluation, ai_explanation } = data;
+            
+            const efficiencyLevel = efficiency_evaluation.efficiency_level;
+            const efficiencyScore = efficiency_evaluation.efficiency_score;
+            const badgeClass = efficiencyLevel.replace('_', '-');
+            const b = efficiency_evaluation.benchmarks;
+            const llmUsed = ai_explanation && ai_explanation.llm_used;
+            const weatherPayload = ai_explanation && ai_explanation.weather;
+
+            const efficiencyLabels = {
+                'efficient': 'MÜKEMMEL',
+                'moderately_efficient': 'ORTA',
+                'inefficient': 'DÜŞÜK'
+            };
+
+            const explanationHtml = formatReportText(ai_explanation.explanation);
+            const recommendationsHtml = formatReportText(ai_explanation.recommendations);
+
+            let weatherHtml = '';
+            if (weatherPayload && (weatherPayload.weather || weatherPayload.location)) {
+                const loc = weatherPayload.location || {};
+                const w = weatherPayload.weather || {};
+                const locText = [loc.name, loc.admin1, loc.country].filter(Boolean).join(', ') || (loc.latitude && loc.longitude ? `${loc.latitude}, ${loc.longitude}` : '—');
+                weatherHtml = `
+                    <div class="benchmark-box">
+                        <strong>Hava durumu / Konum</strong>
+                        <div class="benchmark-row">
+                            <span class="benchmark-dot green"></span>
+                            <div>Konum: <strong>${locText}</strong></div>
+                        </div>
+                        <div class="benchmark-row">
+                            <span class="benchmark-dot orange"></span>
+                            <div>Dış hava: <strong>${(w.outdoor_temp_c ?? '-').toLocaleString('tr-TR', {maximumFractionDigits: 1})}°C</strong> (min: ${(w.today_min_c ?? '-').toLocaleString('tr-TR', {maximumFractionDigits: 1})}°C, max: ${(w.today_max_c ?? '-').toLocaleString('tr-TR', {maximumFractionDigits: 1})}°C)</div>
+                        </div>
+                        <div class="benchmark-row">
+                            <span class="benchmark-dot red"></span>
+                            <div>Nem: <strong>${(w.humidity_percent ?? '-').toLocaleString('tr-TR', {maximumFractionDigits: 0})}%</strong> · Rüzgar: <strong>${(w.wind_speed_m_s ?? '-').toLocaleString('tr-TR', {maximumFractionDigits: 1})} m/s</strong></div>
+                        </div>
+                        <p class="meter-legend">Bu veri analize bağlamsal olarak dahil edilir (özellikle HVAC yorumlarında).</p>
+                    </div>
+                `;
+            }
+
+            let html = `
+                <div class="results-header">
+                    <div class="efficiency-badge ${badgeClass}">
+                        ${efficiencyLabels[efficiencyLevel] || efficiencyScore.toUpperCase()} VERİMLİLİK
+                    </div>
+                    ${llmUsed ? '<span class="llm-badge">Llama 3.2 ile yorumlandı</span>' : ''}
+                </div>
+
+                <div class="results-summary">
+                    <h3>Özet Metrikler</h3>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value">${kpis.total_energy_kwh.toLocaleString('tr-TR', {maximumFractionDigits: 1})}</div>
+                            <div class="kpi-label">Toplam Enerji</div>
+                            <div class="kpi-sublabel">${efficiency_evaluation.period_months || 12} ay için</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">${kpis.energy_per_sqm_kwh.toLocaleString('tr-TR', {maximumFractionDigits: 2})}</div>
+                            <div class="kpi-label">Enerji / m²</div>
+                            <div class="kpi-sublabel">kWh/m²</div>
+                        </div>
+                        ${kpis.energy_per_occupant_kwh ? `
+                        <div class="kpi-card">
+                            <div class="kpi-value">${kpis.energy_per_occupant_kwh.toLocaleString('tr-TR', {maximumFractionDigits: 1})}</div>
+                            <div class="kpi-label">Enerji / Kişi</div>
+                            <div class="kpi-sublabel">kWh</div>
+                        </div>
+                        ` : ''}
+                        <div class="kpi-card">
+                            <div class="kpi-value">${efficiency_evaluation.annual_energy_per_sqm.toLocaleString('tr-TR', {maximumFractionDigits: 1})}</div>
+                            <div class="kpi-label">Yıllık Enerji / m²</div>
+                            <div class="kpi-sublabel">kWh/m²/yıl</div>
+                        </div>
+                    </div>
+                </div>
+
+                ${weatherHtml}
+
+                <div class="chart-container">
+                    <h4>Enerji Verimliliği Karşılaştırması (kWh/m²/yıl)</h4>
+                    <canvas id="benchmarkChart"></canvas>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header open" onclick="toggleCollapse(this)">
+                        <h3>Verimlilik Analizi</h3>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="collapsible-content open">
+                        <div class="collapsible-body">
+                            <div class="explanation-content">${explanationHtml}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header open" onclick="toggleCollapse(this)">
+                        <h3>Öneriler</h3>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="collapsible-content open">
+                        <div class="collapsible-body">
+                            <div class="recommendations-content">${recommendationsHtml}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-new-analysis" onclick="document.getElementById('analysisForm').scrollIntoView({behavior:'smooth'})">
+                    Yeni Analiz Yap
+                </button>
+            `;
+
+            resultsContent.innerHTML = html;
+
+            // Draw benchmark comparison chart
+            if (window.benchmarkChartInstance) {
+                window.benchmarkChartInstance.destroy();
+            }
+            const ctx = document.getElementById('benchmarkChart');
+            if (ctx) {
+                const annual = efficiency_evaluation.annual_energy_per_sqm;
+                const maxVal = Math.max(annual, b.inefficient) * 1.2;
+                window.benchmarkChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Binanız', 'Mükemmel (≤' + b.efficient + ')', 'Orta (≤' + b.moderate + ')', 'Düşük (>' + b.moderate + ')'],
+                        datasets: [{
+                            label: 'kWh/m²/yıl',
+                            data: [annual, b.efficient, b.moderate, b.inefficient],
+                            backgroundColor: [
+                                efficiencyLevel === 'efficient' ? 'rgba(0, 200, 83, 0.8)' : efficiencyLevel === 'moderately_efficient' ? 'rgba(255, 152, 0, 0.8)' : 'rgba(255, 82, 82, 0.8)',
+                                'rgba(0, 200, 83, 0.4)',
+                                'rgba(255, 152, 0, 0.4)',
+                                'rgba(255, 82, 82, 0.4)'
+                            ],
+                            borderColor: [
+                                efficiencyLevel === 'efficient' ? '#00c853' : efficiencyLevel === 'moderately_efficient' ? '#ff9800' : '#ff5252',
+                                '#00c853',
+                                '#ff9800',
+                                '#ff5252'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: maxVal,
+                                title: { display: true, text: 'kWh/m²/yıl' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function toggleCollapse(header) {
+            header.classList.toggle('open');
+            const content = header.nextElementSibling;
+            content.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

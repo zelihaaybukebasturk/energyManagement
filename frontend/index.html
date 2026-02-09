@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Building Energy Efficiency System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .efficiency-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .efficiency-badge.efficient {
+            background: #4caf50;
+            color: white;
+        }
+
+        .efficiency-badge.moderately_efficient {
+            background: #ff9800;
+            color: white;
+        }
+
+        .efficiency-badge.inefficient {
+            background: #f44336;
+            color: white;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .kpi-card .kpi-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .kpi-card .kpi-sublabel {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .explanation-section {
+            margin-top: 25px;
+        }
+
+        .explanation-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .explanation-content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .recommendations-content {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 AI-Driven Building Energy Efficiency System</h1>
+            <p>Analyze, Evaluate, and Optimize Your Building's Energy Performance</p>
+        </div>
+
+        <div class="main-content">
+            <div class="card input-section">
+                <h2>Building Information</h2>
+                <form id="analysisForm">
+                    <div class="form-group">
+                        <label for="totalEnergy">Total Energy Consumption (kWh)</label>
+                        <input type="number" id="totalEnergy" name="totalEnergy" step="0.01" required placeholder="e.g., 50000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buildingArea">Building Area (m²)</label>
+                        <input type="number" id="buildingArea" name="buildingArea" step="0.01" required placeholder="e.g., 2000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buildingType">Building Type</label>
+                        <select id="buildingType" name="buildingType" required>
+                            <option value="">Select building type</option>
+                            <option value="school">School</option>
+                            <option value="university">University</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="residential">Residential</option>
+                            <option value="office">Office</option>
+                            <option value="hospital">Hospital</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="occupancy">Occupancy (Optional)</label>
+                        <input type="number" id="occupancy" name="occupancy" step="1" placeholder="e.g., 100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="periodMonths">Measurement Period (Months)</label>
+                        <input type="number" id="periodMonths" name="periodMonths" step="0.1" value="12" min="0.1" required>
+                    </div>
+
+                    <button type="submit" class="btn" id="analyzeBtn">Analyze Energy Efficiency</button>
+                </form>
+            </div>
+
+            <div class="card results-section" id="resultsSection">
+                <h2>Analysis Results</h2>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API URL - change if backend is running on a different host/port
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8000'
+            : `http://${window.location.hostname}:8000`;
+
+        document.getElementById('analysisForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                total_energy_kwh: parseFloat(document.getElementById('totalEnergy').value),
+                building_area_m2: parseFloat(document.getElementById('buildingArea').value),
+                building_type: document.getElementById('buildingType').value,
+                occupancy: document.getElementById('occupancy').value ? parseInt(document.getElementById('occupancy').value) : null,
+                period_months: parseFloat(document.getElementById('periodMonths').value) || 12.0
+            };
+
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+
+            // Show loading state
+            analyzeBtn.disabled = true;
+            resultsSection.classList.add('active');
+            resultsContent.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing building energy efficiency...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Analysis failed');
+                }
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                resultsContent.innerHTML = `
+                    <div class="error">
+                        <strong>Error:</strong> ${error.message}
+                        <br><br>
+                        Make sure the backend server is running on ${API_BASE_URL}
+                    </div>
+                `;
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function displayResults(data) {
+            const { kpis, efficiency_evaluation, ai_explanation } = data;
+            
+            const efficiencyLevel = efficiency_evaluation.efficiency_level;
+            const efficiencyScore = efficiency_evaluation.efficiency_score;
+            const badgeClass = efficiencyLevel.replace('_', '-');
+
+            let html = `
+                <div class="efficiency-badge ${badgeClass}">
+                    ${efficiencyScore.toUpperCase()} EFFICIENCY
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">${kpis.total_energy_kwh.toLocaleString(undefined, {maximumFractionDigits: 1})}</div>
+                        <div class="kpi-label">Total Energy (kWh)</div>
+                        <div class="kpi-sublabel">for ${efficiency_evaluation.period_months || 12} months</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">${kpis.energy_per_sqm_kwh.toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+                        <div class="kpi-label">Energy per m² (for period)</div>
+                        <div class="kpi-sublabel">kWh/m² in ${efficiency_evaluation.period_months || 12} months</div>
+                    </div>
+                    ${kpis.energy_per_occupant_kwh ? `
+                    <div class="kpi-card">
+                        <div class="kpi-value">${kpis.energy_per_occupant_kwh.toLocaleString(undefined, {maximumFractionDigits: 1})}</div>
+                        <div class="kpi-label">Energy per Occupant (kWh)</div>
+                        <div class="kpi-sublabel">for period</div>
+                    </div>
+                    ` : ''}
+                    <div class="kpi-card">
+                        <div class="kpi-value">${efficiency_evaluation.annual_energy_per_sqm.toLocaleString(undefined, {maximumFractionDigits: 1})}</div>
+                        <div class="kpi-label">Annual Energy per m²</div>
+                        <div class="kpi-sublabel">kWh/m²/year (normalized)</div>
+                    </div>
+                </div>
+                ${(efficiency_evaluation.period_months === 12) ? '<p style="font-size:0.85em; color:#666; margin-top: -10px;">When period is 12 months, &quot;Energy per m² (for period)&quot; and &quot;Annual Energy per m²&quot; are the same.</p>' : ''}
+
+                <div class="explanation-section">
+                    <h3>📊 Efficiency Analysis</h3>
+                    <div class="explanation-content">${ai_explanation.explanation}</div>
+                </div>
+
+                <div class="explanation-section">
+                    <h3>💡 Recommendations</h3>
+                    <div class="recommendations-content">${ai_explanation.recommendations}</div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px; font-size: 0.9em; color: #666;">
+                    <strong>Benchmark Comparison:</strong><br>
+                    Efficient: ≤ ${efficiency_evaluation.benchmarks.efficient} kWh/m²/year<br>
+                    Moderate: ≤ ${efficiency_evaluation.benchmarks.moderate} kWh/m²/year<br>
+                    Inefficient: > ${efficiency_evaluation.benchmarks.moderate} kWh/m²/year
+                </div>
+            `;
+
+            resultsContent.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+

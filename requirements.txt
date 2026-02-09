@@ -1,0 +1,18 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+python-multipart==0.0.6
+requests==2.31.0
+pandas>=1.5.0
+openpyxl>=3.0.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+deep-translator>=1.11.0
+
+# LLM Providers (install as needed)
+# openai>=1.0.0  # For OpenAI GPT models
+# anthropic>=0.18.0  # For Anthropic Claude models
+# ollama  # For local Ollama models (optional)
+

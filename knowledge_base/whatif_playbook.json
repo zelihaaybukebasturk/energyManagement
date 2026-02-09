@@ -1,0 +1,73 @@
+{
+  "title": "What-if Playbook: Energy & KPI Simulation Guidance",
+  "overview": "This playbook provides practical assumptions and interpretation tips for common what-if questions (LED retrofit, occupancy reduction, reduced operating hours) and how outdoor weather context can influence HVAC-driven electricity consumption.",
+  "scenarios": [
+    {
+      "id": "led",
+      "name": "Switch to LED lighting",
+      "typical_impacts": [
+        "Lighting energy can drop by 50-70% depending on baseline technology and hours of operation.",
+        "A secondary benefit may appear in cooling seasons due to reduced internal heat gains."
+      ],
+      "kpi_notes": [
+        "Total kWh tends to decrease; energy per person decreases if occupancy is constant.",
+        "If occupancy changes at the same time, per-person KPIs should be interpreted together with fixed loads."
+      ],
+      "recommended_measures": [
+        "LED conversion in high-use areas first",
+        "Occupancy sensors for intermittently used rooms",
+        "Daylight harvesting near windows",
+        "Lighting scheduling and zoning"
+      ],
+      "risk_and_checks": [
+        "Verify illuminance levels (avoid over-lighting)",
+        "Ensure compatibility with controls (dimming/sensors)",
+        "Measure before/after with sub-metering where possible"
+      ]
+    },
+    {
+      "id": "occupancy_down_20",
+      "name": "20% fewer people / occupancy reduction",
+      "typical_impacts": [
+        "Energy rarely drops 1:1 with occupancy because a meaningful portion of loads are fixed (baseline HVAC, standby, IT infrastructure).",
+        "If spaces are consolidated (closing floors/rooms), fixed-load reductions can become significant."
+      ],
+      "kpi_notes": [
+        "Energy per person can increase if fixed loads remain unchanged while occupancy drops.",
+        "To realize savings, align schedules, ventilation rates, and open-area footprint with real occupancy."
+      ],
+      "recommended_measures": [
+        "Occupancy-based HVAC scheduling",
+        "Space consolidation (close unused zones)",
+        "Demand-controlled ventilation (CO2-based DCV)",
+        "Plug-load shutdown discipline"
+      ]
+    },
+    {
+      "id": "hours_shorter",
+      "name": "Shorter operating hours",
+      "typical_impacts": [
+        "Schedule-dependent loads (lighting, HVAC, part of plug loads) typically scale with operating hours.",
+        "A base load remains (server rooms, safety systems, standby devices)."
+      ],
+      "kpi_notes": [
+        "Total kWh decreases; energy per person depends on whether occupancy also changes.",
+        "The benefit is larger when outdoor-indoor temperature difference is large (HVAC-driven periods)."
+      ],
+      "recommended_measures": [
+        "Strict shutdown / start-up routines",
+        "Automation and time schedules",
+        "HVAC setback temperatures during unoccupied hours",
+        "Cleaning/security schedules aligned with reduced hours"
+      ]
+    }
+  ],
+  "weather_context": {
+    "key_idea": "When the indoor setpoint differs significantly from outdoor temperature, HVAC load rises. This can increase both total electricity and the incremental impact of scheduling measures.",
+    "interpretation_tips": [
+      "Large ΔT (indoor-outdoor) suggests HVAC-heavy operation; consider setpoint optimization and scheduling as high-leverage levers.",
+      "Small ΔT suggests HVAC is less dominant; lighting and plug loads may explain a larger share of consumption."
+    ]
+  }
+}
+

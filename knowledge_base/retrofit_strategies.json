@@ -1,0 +1,131 @@
+{
+  "title": "Building Energy Retrofit Strategies",
+  "overview": "Comprehensive retrofit strategies for improving building energy efficiency",
+  "retrofit_categories": [
+    {
+      "category": "Building Envelope",
+      "strategies": [
+        {
+          "measure": "Insulation Improvements",
+          "description": "Upgrade wall, roof, and floor insulation",
+          "impact": "High",
+          "cost": "Medium",
+          "savings": "15-30%",
+          "applicability": "All building types"
+        },
+        {
+          "measure": "Window Upgrades",
+          "description": "Replace single-pane windows with double/triple-pane, low-E windows",
+          "impact": "High",
+          "cost": "High",
+          "savings": "10-20%",
+          "applicability": "Buildings with old windows"
+        },
+        {
+          "measure": "Air Sealing",
+          "description": "Seal air leaks in building envelope",
+          "impact": "Medium",
+          "cost": "Low",
+          "savings": "5-15%",
+          "applicability": "All building types"
+        }
+      ]
+    },
+    {
+      "category": "HVAC Systems",
+      "strategies": [
+        {
+          "measure": "Equipment Replacement",
+          "description": "Replace old HVAC equipment with high-efficiency models",
+          "impact": "Very High",
+          "cost": "High",
+          "savings": "20-40%",
+          "applicability": "Buildings with equipment >15 years old"
+        },
+        {
+          "measure": "Controls Upgrade",
+          "description": "Install building automation and smart controls",
+          "impact": "High",
+          "cost": "Medium",
+          "savings": "15-25%",
+          "applicability": "Buildings without modern controls"
+        },
+        {
+          "measure": "Ductwork Improvements",
+          "description": "Seal and insulate ductwork",
+          "impact": "Medium",
+          "cost": "Medium",
+          "savings": "10-20%",
+          "applicability": "Buildings with ducted systems"
+        }
+      ]
+    },
+    {
+      "category": "Lighting Systems",
+      "strategies": [
+        {
+          "measure": "LED Conversion",
+          "description": "Complete replacement of lighting with LED technology",
+          "impact": "High",
+          "cost": "Medium",
+          "savings": "50-70%",
+          "applicability": "All building types"
+        },
+        {
+          "measure": "Smart Controls",
+          "description": "Install occupancy sensors, daylight harvesting, scheduling",
+          "impact": "High",
+          "cost": "Low-Medium",
+          "savings": "20-40%",
+          "applicability": "All building types"
+        }
+      ]
+    },
+    {
+      "category": "Renewable Energy",
+      "strategies": [
+        {
+          "measure": "Solar PV Installation",
+          "description": "Install rooftop or ground-mounted solar panels",
+          "impact": "High",
+          "cost": "High",
+          "savings": "30-50% of electricity",
+          "applicability": "Buildings with suitable roof/space"
+        },
+        {
+          "measure": "Solar Thermal",
+          "description": "Solar hot water systems",
+          "impact": "Medium",
+          "cost": "Medium",
+          "savings": "40-60% of hot water energy",
+          "applicability": "Buildings with high hot water demand"
+        }
+      ]
+    }
+  ],
+  "implementation_roadmap": {
+    "phase_1_quick_wins": [
+      "Air sealing",
+      "Lighting LED conversion",
+      "HVAC scheduling optimization",
+      "Occupancy sensors"
+    ],
+    "phase_2_medium_term": [
+      "Insulation improvements",
+      "HVAC controls upgrade",
+      "Window upgrades (if cost-effective)"
+    ],
+    "phase_3_long_term": [
+      "HVAC equipment replacement",
+      "Renewable energy installation",
+      "Comprehensive building automation"
+    ]
+  },
+  "cost_benefit_considerations": {
+    "simple_payback": "Most measures have payback periods of 3-10 years",
+    "lifecycle_cost": "Consider total cost of ownership, not just initial cost",
+    "financing": "Many jurisdictions offer incentives and financing options",
+    "prioritization": "Focus on high-impact, cost-effective measures first"
+  }
+}
+

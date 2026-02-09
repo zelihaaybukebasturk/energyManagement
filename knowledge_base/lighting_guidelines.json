@@ -1,0 +1,67 @@
+{
+  "title": "Lighting System Energy Efficiency Guidelines",
+  "overview": "Lighting typically accounts for 15-25% of building energy consumption. Modern LED technology and smart controls can significantly reduce this.",
+  "efficiency_measures": [
+    {
+      "category": "Technology Upgrade",
+      "measures": [
+        "Replace incandescent and fluorescent lighting with LED",
+        "LED efficiency: 80-100 lumens per watt vs. 10-20 for incandescent",
+        "Longer lifespan reduces maintenance costs",
+        "Better color rendering and controllability"
+      ],
+      "potential_savings": "50-70%"
+    },
+    {
+      "category": "Smart Controls",
+      "measures": [
+        "Install occupancy sensors in offices, classrooms, and common areas",
+        "Implement daylight harvesting systems",
+        "Use dimming controls to reduce light levels when appropriate",
+        "Schedule lighting based on occupancy patterns"
+      ],
+      "potential_savings": "20-40%"
+    },
+    {
+      "category": "Design Optimization",
+      "measures": [
+        "Optimize lighting layouts to reduce over-lighting",
+        "Use task lighting where appropriate",
+        "Maximize natural daylight utilization",
+        "Implement lighting zones for better control"
+      ],
+      "potential_savings": "10-20%"
+    }
+  ],
+  "implementation_priorities": {
+    "high": [
+      "Replace high-use area lighting with LED",
+      "Install occupancy sensors in frequently unoccupied spaces",
+      "Implement scheduling for common areas"
+    ],
+    "medium": [
+      "Daylight harvesting systems",
+      "Dimming controls",
+      "Task lighting optimization"
+    ],
+    "low": [
+      "Aesthetic lighting upgrades",
+      "Advanced control systems"
+    ]
+  },
+  "building_type_considerations": {
+    "school": {
+      "focus_areas": ["Classrooms", "Hallways", "Gymnasiums"],
+      "scheduling": "Daytime operation, minimal night use"
+    },
+    "university": {
+      "focus_areas": ["Libraries", "Lecture halls", "Common areas"],
+      "scheduling": "Extended hours, variable by area"
+    },
+    "hotel": {
+      "focus_areas": ["Guest rooms", "Common areas", "Exterior"],
+      "scheduling": "24/7 operation with smart controls"
+    }
+  }
+}
+

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş - AI-Driven Building Energy Efficiency</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #111827 0%, #020617 55%, #020617 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #e5e7eb;
+        }
+
+        .login-container {
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.96), #020617);
+            border-radius: 24px;
+            box-shadow:
+                0 26px 80px rgba(15,23,42,0.95),
+                0 0 0 1px rgba(30,64,175,0.55);
+            padding: 40px 34px 34px;
+            max-width: 420px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            margin: 0 auto 10px;
+            background: radial-gradient(circle at 30% 0%, #4ade80, #22c55e, #22d3ee);
+            box-shadow: 0 0 24px rgba(45,212,191,0.8);
+        }
+
+        .logo h1 {
+            color: #e5e7eb;
+            font-size: 1.7em;
+            margin-bottom: 4px;
+        }
+
+        .logo p {
+            color: #9ca3af;
+            font-size: 0.85em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(51,65,85,0.9);
+            font-size: 0.95em;
+            transition: all 0.2s;
+            background: rgba(15,23,42,0.9);
+            color: #e5e7eb;
+        }
+
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(94,234,212,0.9);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.9),
+                0 0 22px rgba(56,189,248,0.6);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.98), #020617);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #22c55e 0%, #22d3ee 40%, #818cf8 100%);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            font-size: 1.02em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.18s, filter 0.15s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 10% 0%, rgba(248,250,252,0.35), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.8),
+                0 22px 65px rgba(56,189,248,0.9);
+            filter: brightness(1.02);
+        }
+
+        .btn-login:hover::before {
+            opacity: 0.8;
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(248,113,113,0.08);
+            color: #fecaca;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid rgba(248,113,113,0.95);
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(31,41,55,0.9);
+        }
+
+        .footer-links a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-size: 0.85em;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <h1>3GEN Energy</h1>
+            <p>AI-Driven Building Energy Efficiency System</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" id="username" name="username" required autocomplete="username" placeholder="Kullanıcı adınızı girin">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Şifrenizi girin">
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                Giriş Yap
+            </button>
+        </form>
+
+        <div class="footer-links">
+            <a href="#" onclick="showDemoMode(); return false;">Demo Modu (Giriş Yapmadan)</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMsg = document.getElementById('errorMessage');
+
+            // Hide error
+            errorMsg.classList.remove('show');
+            errorMsg.textContent = '';
+
+            // Show loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading"></span>Giriş yapılıyor...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.access_token) {
+                    // Store token
+                    localStorage.setItem('auth_token', data.access_token);
+                    localStorage.setItem('username', username);
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    throw new Error(data.detail || 'Giriş başarısız');
+                }
+            } catch (error) {
+                errorMsg.textContent = error.message || 'Giriş yapılamadı. Lütfen tekrar deneyin.';
+                errorMsg.classList.add('show');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Giriş Yap';
+            }
+        });
+
+        function showDemoMode() {
+            if (confirm('Demo modunda giriş yapmadan devam etmek istiyor musunuz?')) {
+                localStorage.setItem('demo_mode', 'true');
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Check if already logged in
+        if (localStorage.getItem('auth_token') || localStorage.getItem('demo_mode')) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

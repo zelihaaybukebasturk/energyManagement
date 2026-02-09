@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oda Bazlı Analiz - 3GEN Energy</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #111827 0%, #020617 55%, #020617 100%);
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: radial-gradient(circle at top left, #22c55e33, #0b1120 40%, #1e293b 100%);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(148,163,184,0.35);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .navbar-brand {
+            font-size: 1.35em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand span.logo-pill {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0%, #4ade80, #22c55e, #22d3ee);
+            box-shadow: 0 0 25px rgba(45,212,191,0.7);
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: rgba(248,250,252,0.95);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.85));
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-size: 0.9em;
+        }
+
+        .nav-link:hover {
+            background: radial-gradient(circle at top, rgba(56,189,248,0.18), rgba(15,23,42,0.9));
+            border-color: rgba(94,234,212,0.8);
+            box-shadow: 0 0 18px rgba(56,189,248,0.45);
+        }
+
+        .btn-logout {
+            background: rgba(15,23,42,0.8);
+            border: 1px solid rgba(148,163,184,0.6);
+            color: #e5e7eb;
+            padding: 8px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-logout:hover {
+            background: radial-gradient(circle at top, rgba(248,113,113,0.35), rgba(15,23,42,0.95));
+            border-color: rgba(248,113,113,0.9);
+            box-shadow: 0 0 18px rgba(248,113,113,0.45);
+        }
+
+        .container {
+            max-width: 100%; /* Tüm sayfayı yay */
+            margin: 0 auto;
+            padding: 28px 22px 40px;
+        }
+
+        .hero {
+            position: relative;
+            background: radial-gradient(circle at top left, rgba(94,234,212,0.12), rgba(15,23,42,0.95));
+            border-radius: 24px;
+            padding: 26px 26px 22px;
+            margin-bottom: 22px;
+            box-shadow:
+                0 32px 80px rgba(15,23,42,0.75),
+                0 0 0 1px rgba(148,163,184,0.35);
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 110% -20%, rgba(56,189,248,0.22), transparent 55%);
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        .hero-header {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .hero h1 {
+            color: #e5e7eb;
+            font-size: 1.9em;
+            letter-spacing: 0.03em;
+        }
+
+        .hero-pill {
+            position: relative;
+            padding: 6px 13px;
+            border-radius: 999px;
+            border: 1px solid rgba(56,189,248,0.7);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.85));
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(226,232,240,0.9);
+        }
+
+        .hero-pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 14px rgba(34,197,94,0.9);
+        }
+
+        .hero p {
+            position: relative;
+            color: rgba(226,232,240,0.92);
+            line-height: 1.6;
+            font-size: 0.96em;
+        }
+
+        .muted { color: rgba(148,163,184,0.9); font-size: 0.9em; }
+        .tiny { color: rgba(148,163,184,0.85); font-size: 0.78em; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Tek sütun ve tüm genişliği kapla */
+            gap: 22px;
+            align-items: flex-start;
+            max-width: 1200px; /* Ortalamak için daha geniş bir max-width */
+            margin: 0 auto; /* Ortalamak için */
+        }
+
+        @media (max-width: 1060px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            position: relative;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.96), #020617);
+            border-radius: 22px;
+            padding: 22px 20px 20px;
+            box-shadow:
+                0 26px 80px rgba(15,23,42,0.95),
+                0 0 0 1px rgba(30,64,175,0.55);
+            border: 1px solid rgba(15,23,42,0.9);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at top, rgba(96,165,250,0.32), transparent 60%);
+            opacity: 0.28;
+            pointer-events: none;
+        }
+
+        .card > * {
+            position: relative;
+        }
+
+        .card h2 {
+            color: #e5e7eb;
+            margin-bottom: 16px;
+            font-size: 1.12em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card h2 span.accent-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #38bdf8;
+            box-shadow: 0 0 12px rgba(56,189,248,0.96);
+        }
+
+        .form-group { margin-bottom: 14px; }
+
+        .form-group.inline {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #e5e7eb;
+            font-weight: 600;
+            font-size: 0.86em;
+        }
+
+        .field-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .field-label-row span.hint {
+            font-size: 0.78em;
+            color: rgba(148,163,184,0.95);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(51,65,85,0.9);
+            font-size: 0.95em;
+            background: rgba(15,23,42,0.9);
+            color: #e5e7eb;
+            transition: all 0.18s ease;
+        }
+
+        input::placeholder {
+            color: rgba(148,163,184,0.85);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: rgba(94,234,212,0.9);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.9),
+                0 0 22px rgba(56,189,248,0.6);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.98), #020617);
+        }
+
+        select {
+            appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, #94a3b8 50%),
+                              linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+            background-position: calc(100% - 16px) 50%, calc(100% - 12px) 50%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 30px;
+            color: #1a202c; /* Koyu gri renk */
+        }
+
+        select option {
+            background: #1e293b; /* Koyu tema için arka plan */
+            color: #e2e8f0; /* Açık renk metin */
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 5px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #22c55e, #22d3ee, #818cf8);
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 2px solid #38bdf8;
+            box-shadow:
+                0 0 0 4px rgba(56,189,248,0.25),
+                0 0 18px rgba(56,189,248,0.85);
+            transition: transform 0.15s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .setpoint-pill {
+            min-width: 56px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.8);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.88));
+            text-align: center;
+            font-size: 0.8em;
+            color: rgba(226,232,240,0.96);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.7);
+            font-size: 0.78em;
+            color: rgba(226,232,240,0.96);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+        }
+
+        .room-grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .room-grid-header h3 {
+            font-size: 0.92em;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(148,163,184,0.96);
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .room-card {
+            position: relative;
+            padding: 16px 14px 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(51,65,85,0.95);
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+            box-shadow:
+                0 18px 60px rgba(15,23,42,0.95),
+                0 0 0 1px rgba(15,23,42,0.9);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .room-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at 0% 0%, rgba(56,189,248,0.35), transparent 55%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .room-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56,189,248,0.9);
+            box-shadow:
+                0 24px 70px rgba(15,23,42,0.98),
+                0 0 0 1px rgba(56,189,248,0.9);
+            background: radial-gradient(circle at top left, rgba(15,23,42,1), #020617);
+        }
+
+        .room-card:hover::before {
+            opacity: 0.35;
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .room-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: rgba(226,232,240,0.98);
+        }
+
+        .room-meta {
+            font-size: 0.76em;
+            color: rgba(148,163,184,0.95);
+        }
+
+        .btn-delete-room {
+            background: rgba(248,113,113,0.1);
+            border: 1px solid rgba(248,113,113,0.6);
+            color: #f87171;
+            padding: 6px 8px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            box-shadow: 0 0 10px rgba(248,113,113,0.3);
+        }
+        .btn-delete-room:hover {
+            background: rgba(248,113,113,0.2);
+            box-shadow: 0 0 15px rgba(248,113,113,0.5);
+            transform: translateY(-1px);
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.82em;
+            color: rgba(226,232,240,0.9);
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-track {
+            width: 34px;
+            height: 18px;
+            border-radius: 999px;
+            background: rgba(30,64,175,0.7);
+            border: 1px solid rgba(30,64,175,0.9);
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            background: #0f172a;
+            box-shadow:
+                0 0 0 2px rgba(148,163,184,0.7),
+                0 0 18px rgba(59,130,246,0.85);
+            transition: transform 0.2s;
+        }
+
+        .toggle input:checked + .toggle-track {
+            background: linear-gradient(90deg, #22c55e, #22d3ee);
+            border-color: rgba(94,234,212,0.95);
+            box-shadow: 0 0 18px rgba(34,197,94,0.9);
+        }
+
+        .toggle input:checked + .toggle-track .toggle-thumb {
+            transform: translateX(14px);
+            box-shadow:
+                0 0 0 2px rgba(34,197,94,0.9),
+                0 0 20px rgba(34,197,94,0.9);
+        }
+
+        .btn-ghost {
+            padding: 7px 13px;
+            border-radius: 999px;
+            border: 1px dashed rgba(148,163,184,0.9);
+            background: rgba(15,23,42,0.8);
+            color: rgba(226,232,240,0.95);
+            font-size: 0.78em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost:hover {
+            border-style: solid;
+            border-color: rgba(56,189,248,0.9);
+            box-shadow: 0 0 18px rgba(56,189,248,0.7);
+            background: radial-gradient(circle at top, rgba(15,23,42,0.98), #020617);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #22c55e 0%, #22d3ee 40%, #818cf8 100%);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            font-size: 1.02em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.18s, filter 0.15s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 10% 0%, rgba(248,250,252,0.35), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.8),
+                0 22px 65px rgba(56,189,248,0.9);
+            filter: brightness(1.02);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 0.8;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary-loading-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 2px solid rgba(15,23,42,0.2);
+            border-top-color: white;
+            animation: spin 0.9s linear infinite;
+            margin-right: 8px;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .results-title {
+            font-size: 1.02em;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(226,232,240,0.95);
+        }
+
+        .results-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: radial-gradient(circle at top, rgba(15,23,42,0.98), rgba(15,23,42,0.92));
+            border: 1px solid rgba(148,163,184,0.8);
+            font-size: 0.8em;
+            color: rgba(226,232,240,0.96);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        .kpi-card {
+            border-radius: 18px;
+            padding: 14px 14px 12px;
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+            border: 1px solid rgba(51,65,85,0.95);
+            box-shadow:
+                0 20px 60px rgba(15,23,42,0.9),
+                0 0 0 1px rgba(15,23,42,0.9);
+        }
+
+        .kpi-value {
+            font-size: 1.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #22c55e 0%, #22d3ee 40%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2px;
+        }
+
+        .kpi-label {
+            font-weight: 700;
+            color: rgba(226,232,240,0.96);
+            font-size: 0.88em;
+        }
+
+        .kpi-sub {
+            color: rgba(148,163,184,0.95);
+            font-size: 0.78em;
+            margin-top: 3px;
+        }
+
+        .room-result-list {
+            margin-top: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(51,65,85,0.95);
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+            padding: 10px 10px 8px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .room-result-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr 0.9fr 0.9fr;
+            gap: 8px;
+            padding: 6px 4px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            color: rgba(226,232,240,0.96);
+        }
+
+        .room-result-row:nth-child(odd) {
+            background: rgba(15,23,42,0.85);
+        }
+
+        .room-result-row:nth-child(even) {
+            background: rgba(15,23,42,0.72);
+        }
+
+        .room-result-row strong {
+            font-weight: 700;
+        }
+
+        .chart-container {
+            margin-top: 14px;
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(51,65,85,0.95);
+            background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 10px;
+            color: #38bdf8;
+            font-weight: 600;
+            font-size: 0.96em;
+        }
+
+        .spinner {
+            border: 4px solid rgba(148,163,184,0.25);
+            border-top: 4px solid #38bdf8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .error {
+            background: rgba(248,113,113,0.08);
+            color: #fecaca;
+            padding: 14px;
+            border-radius: 14px;
+            border-left: 4px solid rgba(248,113,113,0.95);
+            margin-top: 12px;
+            font-size: 0.86em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="logo-pill"></span>
+            <span>3GEN Energy</span>
+        </div>
+        <div class="navbar-user">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+            <button class="btn-logout" onclick="logout()">
+                <span>Çıkış</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <div class="hero-header">
+                <div>
+                    <div class="hero-pill">
+                        <span class="hero-pill-dot"></span>
+                        Room-based digital twin
+                    </div>
+                    <h1>Oda Bazlı Enerji Simülatörü</h1>
+                </div>
+                <div class="badge">
+                    <span class="badge-dot"></span>
+                    Sensör verisi olmadan, fiziksel olarak mantıklı varsayımlar ile.
+                </div>
+            </div>
+            <p>
+                Oda/alan kartlarına yalnızca <strong>oda büyüklüğü, kişi sayısı, kullanım tipi ve oda içi cihazlar</strong>ı gir,
+                biz de seçtiğin periyot için <strong>tahmini enerji tüketimi ve maliyetini</strong> hesaplayalım.
+            </p>
+            <p class="muted" style="margin-top:8px;">
+                Not: Bu sayfa <strong>sayaç verisi olmadan</strong> çalışır; sonuçlar temsilîdir ve sahadaki gerçek tüketimle
+                doğrulanmalıdır. Bina seviyesi KPI + RAG yorumları için dashboard’daki analiz ekranını kullanabilirsin.
+            </p>
+        </div>
+
+        <div class="grid">
+            <!-- Bina seviyesi kart -->
+            <div class="card">
+                <h2><span class="accent-dot"></span>Bina Konfigürasyonu</h2>
+                <form id="buildingForm">
+                    <div class="form-group">
+                        <div class="field-label-row">
+                            <label for="city">Şehir</label>
+                            <span class="hint">Hava ve iklim varsayımları için</span>
+                        </div>
+                        <input type="text" id="city" value="İstanbul" placeholder="Örn: İstanbul">
+                    </div>
+
+                    <div class="form-group inline">
+                        <div>
+                            <div class="field-label-row">
+                                <label for="climateZone">İklim bölgesi</label>
+                                <span class="hint">Basit HVAC katsayısı</span>
+                            </div>
+                            <select id="climateZone">
+                                <option value="temperate" selected>Ilıman</option>
+                                <option value="hot">Sıcak</option>
+                                <option value="cold">Soğuk</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="field-label-row">
+                                <label for="buildingType">Bina tipi</label>
+                                <span class="hint">Yük payı varsayımları</span>
+                            </d>
+                            <select id="buildingType">
+                                <option value="office" selected>Ofis</option>
+                                <option value="meeting">Toplantı / Ortak alan</option>
+                                <option value="school">Okul</option>
+                                <option value="university">Üniversite</option>
+                                <option value="hotel">Otel</option>
+                                <option value="residential">Konut</option>
+                                <option value="hospital">Hastane</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display:none;">
+                        <input type="hidden" id="priceTl" value="3.5"> <!-- Elektrik birim fiyatı kaldırıldı, sabit değer 3.5 -->
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-label-row">
+                            <label for="globalSetpoint">Varsayılan setpoint (°C)</label>
+                            <span class="hint">Odalar bu değeri miras alır, oda içinde değiştirebilirsin.</span>
+                        </div>
+                        <div class="slider-row">
+                            <input type="range" id="globalSetpoint" min="18" max="26" step="0.5" value="22">
+                            <div class="setpoint-pill">
+                                <span id="globalSetpointValue">22.0°C</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="runBtn" type="button">
+                        <span id="runBtnInner">Tüm Odalar İçin Hesapla</span>
+                    </button>
+                    <p class="tiny" style="margin-top:8px;">
+                        Hesaplama tamamen frontend’de yapılır; backend kapalı olsa bile oda bazlı simülasyon çalışır.
+                    </p>
+                </form>
+            </div>
+
+            <!-- Oda kartları + sonuçlar -->
+            <div class="card results" id="resultsCard">
+                <div class="results-header">
+                    <span class="results-title">Oda Kartları & Sonuçlar</span>
+                    <button type="button" class="btn-ghost" id="addRoomBtn">
+                        <span>+ Yeni oda kartı ekle</span>
+                    </button>
+                </div>
+
+                <div class="form-group inline" style="margin-bottom: 20px;">
+                    <div>
+                        <div class="field-label-row">
+                            <label for="periodMonths">Periyot (ay)</label>
+                            <span class="hint">Simülasyon süresi</span>
+                        </div>
+                        <input type="number" id="periodMonths" step="0.1" min="0.1" value="1" required>
+                    </div>
+                    <div><p class="tiny" style="padding-top:28px;">Elektrik birim fiyatı varsayılan 3.5 TL/kWh olarak alınır.</p></div>
+                </div>
+                <div id="roomsContainer" class="room-grid"></div>
+
+                <div id="resultsBody" style="margin-top:18px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // Check authentication (same as dashboard)
+        const token = localStorage.getItem('auth_token');
+        const demoMode = localStorage.getItem('demo_mode');
+        if (!token && !demoMode) {
+            window.location.href = 'login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('demo_mode');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+
+        function formatNumberTR(v, maxDigits = 2) {
+            if (v === null || v === undefined || Number.isNaN(v)) return '-';
+            return Number(v).toLocaleString('tr-TR', { maximumFractionDigits: maxDigits });
+        }
+
+        // --- Varsayımlar (cihaz güçleri ve çalışma saatleri) ---
+        const DEVICE_POWER_W = {
+            LED: 10,          // W / armatür
+            FLUO: 18,         // W / armatür
+            LAPTOP: 60,       // W / cihaz
+            DESKTOP: 200,     // W / cihaz
+            PROJECTOR: 300,   // W
+            FAN: 75           // W
+        };
+
+        // Oda tipine göre günlük çalışma saati varsayımları
+        const ROOM_HOURS_BY_TYPE = {
+            office: 9,
+            meeting: 4,
+            classroom: 6,
+            lab: 8,
+            other: 8
+        };
+
+        // Bina tipine göre HVAC yük payı (yaklaşık)
+        const HVAC_SHARE_BY_BUILDING = {
+            office: 0.45,
+            school: 0.40,
+            university: 0.43,
+            hotel: 0.52,
+            residential: 0.45,
+            hospital: 0.55,
+            meeting: 0.40
+        };
+
+        // İklim bölgesine göre basit düzeltme katsayısı
+        const CLIMATE_HVAC_MULTIPLIER = {
+            temperate: 1.0,
+            hot: 1.15,
+            cold: 1.1
+        };
+
+        const roomsContainer = document.getElementById('roomsContainer');
+        const resultsCard = document.getElementById('resultsCard');
+        const resultsBody = document.getElementById('resultsBody');
+        const runBtn = document.getElementById('runBtn');
+        const runBtnInner = document.getElementById('runBtnInner');
+
+        // Global setpoint badge
+        const globalSetpointInput = document.getElementById('globalSetpoint');
+        const globalSetpointValue = document.getElementById('globalSetpointValue');
+        function syncGlobalSetpointLabel() {
+            const v = parseFloat(globalSetpointInput.value || '22');
+            globalSetpointValue.textContent = v.toFixed(1) + '°C';
+        }
+        globalSetpointInput.addEventListener('input', syncGlobalSetpointLabel);
+        syncGlobalSetpointLabel();
+
+        // Oda kartı oluşturucu
+        let roomIndexCounter = 1;
+        function createRoomCard(initial = {}) {
+            const idx = roomIndexCounter++;
+            const div = document.createElement('div');
+            div.className = 'room-card';
+            div.dataset.roomId = idx; // Add data-room-id to the card itself
+            const defaultSetpoint = parseFloat(globalSetpointInput.value || '22');
+            const roomLabel = initial.name || `Oda ${idx}`;
+
+            div.innerHTML = `
+                    <div class="room-header">
+                        <div class="room-title">${roomLabel}</div>
+                        <div class="room-meta">${formatNumberTR(initial.area_m2 || 40, 0)} m² · ${initial.type || 'Ofis'}</div>
+                        <button class="btn-delete-room" data-room-id="${idx}" title="Odayı sil">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.846 48.846 0 0 1 3.321 4.704c.163.665.163 1.33 0 2a48.846 48.846 0 0 1-3.321 4.704v.227c.307.9.645 1.735.992 2.507A8.967 8.967 0 0 1 12 20.25a8.967 8.967 0 0 1-8.519-5.321c.347-.772.685-1.607.992-2.507v-.227a48.846 48.846 0 0 1-3.321-4.704c-.163-.665-.163-1.33 0-2S3.938 5.143 7.259 4.478v-.227c.307-.9.645-1.735.992-2.507A8.967 8.967 0 0 1 12 3.75a8.967 8.967 0 0 1 3.749 2.222c.347.772.685 1.607.992 2.507ZM12 12.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                <div class="form-group inline">
+                    <div>
+                        <div class="field-label-row">
+                            <label>Oda alanı (m²)</label>
+                        </div>
+                        <input type="number" class="input-area" min="1" step="0.1" value="${initial.area_m2 || 40}" placeholder="Örn: 40">
+                    </div>
+                    <div>
+                        <div class="field-label-row">
+                            <label>Kişi sayısı</label>
+                        </div>
+                        <input type="number" class="input-people" min="1" step="1" value="${initial.people || 6}" placeholder="Örn: 6">
+                    </div>
+                </div>
+
+                <div class="form-group inline">
+                    <div>
+                        <div class="field-label-row">
+                            <label>Oda tipi</label>
+                        </div>
+                            <select class="select-room-type">
+                                <option value="office" ${initial.type === 'office' ? 'selected' : ''}>Ofis</option>
+                                <option value="meeting" ${initial.type === 'meeting' ? 'selected' : ''}>Toplantı odası</option>
+                                <option value="classroom" ${initial.type === 'classroom' ? 'selected' : ''}>Sınıf</option>
+                                <option value="lab" ${initial.type === 'lab' ? 'selected' : ''}>Laboratuvar</option>
+                                <option value="other" ${initial.type === 'other' ? 'selected' : ''}>Diğer</option>
+                            </select>
+                    </div>
+                    <div>
+                        <div class="field-label-row">
+                            <label>Setpoint (°C)</label>
+                            <span class="hint">Bu oda için hedef sıcaklık</span>
+                        </div>
+                        <div class="slider-row">
+                            <input type="range" class="setpoint-slider" min="18" max="26" step="0.5" value="${initial.setpoint || defaultSetpoint}">
+                            <div class="setpoint-pill"><span class="setpoint-value">${(initial.setpoint || defaultSetpoint).toFixed(1)}°C</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group inline">
+                    <div>
+                        <div class="field-label-row">
+                            <label>Aydınlatma</label>
+                            <span class="hint">Tip + armatür adedi</span>
+                        </div>
+                        <div class="form-group inline" style="margin-bottom:0;">
+                            <div>
+                                <select class="select-lighting-type">
+                                    <option value="led" ${initial.lightingType === 'led' ? 'selected' : ''}>LED (~10W)</option>
+                                    <option value="fluorescent" ${initial.lightingType === 'fluorescent' ? 'selected' : ''}>Floresan (~18W)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <input type="number" class="input-lighting-count" min="0" step="1" value="${initial.lightingCount || 8}" placeholder="Armatür adedi">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="field-label-row">
+                            <label>Bilgisayar</label>
+                            <span class="hint">Tür + toplam adet</span>
+                        </div>
+                        <div class="form-group inline" style="margin-bottom:0;">
+                            <div>
+                                <select class="select-computer-type">
+                                    <option value="laptop" ${initial.computerType === 'laptop' ? 'selected' : ''}>Laptop (~60W)</option>
+                                    <option value="desktop" ${initial.computerType === 'desktop' ? 'selected' : ''}>Masaüstü (~200W)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <input type="number" class="input-computer-count" min="0" step="1" value="${initial.computers || 6}" placeholder="Adet">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group inline">
+                    <div>
+                        <label>Cihazlar</label>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                            <label class="toggle">
+                                <input type="checkbox" class="toggle-projector" ${initial.projector ? 'checked' : ''}>
+                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                                <span>Projeksiyon (~300W)</span>
+                            </label>
+                            <label class="toggle">
+                                <input type="checkbox" class="toggle-fan" ${initial.fan ? 'checked' : ''}>
+                                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                                <span>Fan (~75W)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="visibility:hidden;">x</label>
+                        <p class="tiny">
+                            Bu oda için enerji tüketimi; <strong>aydınlatma + IT yükü + basit HVAC tahmini</strong> üzerinden hesaplanır.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            const slider = div.querySelector('.setpoint-slider');
+            const sliderLabel = div.querySelector('.setpoint-value');
+            slider.addEventListener('input', () => {
+                sliderLabel.textContent = parseFloat(slider.value || '22').toFixed(1) + '°C';
+            });
+
+            roomsContainer.appendChild(div);
+        }
+
+        // En az 2 örnek oda ile başla
+        createRoomCard({ name: 'Ofis 1', area_m2: 40, people: 8, lightingCount: 10, computers: 6, computerType: 'laptop', projector: true, fan: false });
+        createRoomCard({ name: 'Toplantı 1', area_m2: 25, people: 6, lightingCount: 6, computers: 2, computerType: 'laptop', projector: true, fan: true });
+        resultsCard.classList.add('active');
+
+        document.getElementById('addRoomBtn').addEventListener('click', () => {
+            createRoomCard({});
+        });
+
+        // Oda silme işlevi
+        roomsContainer.addEventListener('click', (e) => {
+            const deleteButton = e.target.closest('.btn-delete-room');
+            if (deleteButton) {
+                if (confirm('Bu odayı silmek istediğinizden emin misiniz?')) {
+                    deleteButton.closest('.room-card').remove();
+                    simulateRoomsAndRender(); // Kart silindikten sonra simülasyonu yeniden çalıştır
+                }
+            }
+        });
+
+        function simulateRooms() {
+            const periodMonths = parseFloat(document.getElementById('periodMonths').value || '1');
+            const days = Math.max(periodMonths * 30, 1);
+            const priceTl = parseFloat(document.getElementById('priceTl').value || '3.5');
+            const buildingType = (document.getElementById('buildingType').value || 'office').toLowerCase();
+            const climateZone = document.getElementById('climateZone').value || 'temperate';
+
+            const hvacShare = HVAC_SHARE_BY_BUILDING[buildingType] || 0.4;
+            const climateMult = CLIMATE_HVAC_MULTIPLIER[climateZone] || 1.0;
+
+            const roomEls = Array.from(document.querySelectorAll('.room-card'));
+            if (!roomEls.length) {
+                return null;
+            }
+
+            const results = [];
+            let totalKwh = 0;
+            let totalCost = 0;
+            let totalArea = 0;
+
+            for (const card of roomEls) {
+                const titleEl = card.querySelector('.room-title');
+                const name = (titleEl && titleEl.textContent ? titleEl.textContent.trim() : '') || 'Oda';
+                const area = parseFloat(card.querySelector('.input-area').value || '0');
+                const people = parseInt(card.querySelector('.input-people').value || '0', 10);
+                const roomType = card.querySelector('.select-room-type').value || 'office';
+                const setpoint = parseFloat(card.querySelector('.setpoint-slider').value || '22');
+                const lightingType = card.querySelector('.select-lighting-type').value || 'led';
+                const lightingCount = parseInt(card.querySelector('.input-lighting-count').value || '0', 10);
+                const computerType = card.querySelector('.select-computer-type').value || 'laptop';
+                const computerCount = parseInt(card.querySelector('.input-computer-count').value || '0', 10);
+                const hasProjector = card.querySelector('.toggle-projector').checked;
+                const hasFan = card.querySelector('.toggle-fan').checked;
+
+                if (!area || area <= 0) continue;
+
+                const hoursPerDay = ROOM_HOURS_BY_TYPE[roomType] || 8;
+
+                const lightingW = lightingCount * (lightingType === 'led' ? DEVICE_POWER_W.LED : DEVICE_POWER_W.FLUO);
+                const perComputerW = computerType === 'desktop' ? DEVICE_POWER_W.DESKTOP : DEVICE_POWER_W.LAPTOP;
+                const itW = computerCount * perComputerW;
+                const projectorW = hasProjector ? DEVICE_POWER_W.PROJECTOR : 0;
+                const fanW = hasFan ? DEVICE_POWER_W.FAN : 0;
+
+                // Kişi başına iç ısı (yaklaşık 100W) ve HVAC payı
+                const sensiblePerPersonW = 100;
+                const internalGainW = people * sensiblePerPersonW;
+                const hvacW = internalGainW * hvacShare * climateMult;
+
+                const avgPowerW = lightingW + itW + projectorW + fanW + hvacW;
+                const energyKwh = (avgPowerW * hoursPerDay * days) / 1000; // Wh -> kWh
+                const costTl = energyKwh * priceTl;
+
+                const kwhPerM2 = area > 0 ? energyKwh / area : 0;
+
+                totalKwh += energyKwh;
+                totalCost += costTl;
+                totalArea += area;
+
+                results.push({
+                    name,
+                    area,
+                    people,
+                    roomType,
+                    setpoint,
+                    energyKwh,
+                    costTl,
+                    kwhPerM2
+                });
+            }
+
+            if (!results.length) {
+                return null;
+            }
+
+            return {
+                rooms: results,
+                totals: {
+                    energyKwh: totalKwh,
+                    costTl: totalCost,
+                    area: totalArea,
+                    kwhPerM2: totalArea > 0 ? totalKwh / totalArea : 0
+                },
+                periodMonths
+            };
+        }
+
+        function renderRoomSimulation(simData) {
+            if (!simData) {
+                resultsBody.innerHTML = `
+                    <div class="loading" style="padding: 20px 10px;">
+                        <div class="spinner"></div>
+                        <p>Simülasyon için en az bir odanın <strong>m²</strong> bilgisinin dolu olması gerekir.</p>
+                        <p class="loading-sub">Lütfen oda kartlarını kontrol edin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const { rooms, totals, periodMonths } = simData;
+
+            const roomRowsHtml = rooms.map(r => `
+                <div class="room-result-row">
+                    <div><strong>${r.name}</strong></div>
+                    <div>${formatNumberTR(r.energyKwh, 1)} kWh</div>
+                    <div>${formatNumberTR(r.costTl, 0)} TL</div>
+                    <div>${formatNumberTR(r.kwhPerM2, 2)} kWh/m²</div>
+                </div>
+            `).join('');
+
+            const periodLabel = periodMonths >= 1
+                ? `${formatNumberTR(periodMonths, 1)} ay`
+                : `${formatNumberTR(periodMonths * 30, 0)} gün (yaklaşık)`;
+
+            resultsBody.innerHTML = `
+                <div class="results-header" style="margin-bottom:10px;">
+                    <span class="results-title">Simülasyon Özeti</span>
+                    <div class="results-badge">
+                        ${rooms.length} oda · ${periodLabel} · sensör verisi olmadan tahmini
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">${formatNumberTR(totals.energyKwh, 1)}</div>
+                        <div class="kpi-label">Toplam enerji</div>
+                        <div class="kpi-sub">${periodLabel} için (tüm odalar)</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">${formatNumberTR(totals.costTl, 0)}</div>
+                        <div class="kpi-label">Toplam maliyet</div>
+                        <div class="kpi-sub">Seçilen elektrik birim fiyatına göre</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">${formatNumberTR(totals.kwhPerM2, 2)}</div>
+                        <div class="kpi-label">Ortalama enerji yoğunluğu</div>
+                        <div class="kpi-sub">kWh/m² (${periodLabel})</div>
+                    </div>
+                </div>
+
+                <div class="room-result-list">
+                    ${roomRowsHtml}
+                </div>
+            `;
+        }
+
+        function simulateRoomsAndRender() {
+            renderRoomSimulation(simulateRooms());
+        }
+
+        runBtn.addEventListener('click', () => {
+            runBtn.disabled = true;
+            runBtnInner.innerHTML = '<span class="btn-primary-loading-dot"></span>Hesaplanıyor...';
+
+            resultsCard.classList.add('active');
+            resultsBody.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Oda kartlarındaki cihaz ve kullanım varsayımlarından enerji profili hesaplanıyor...
+                </div>
+            `;
+
+            // Küçük bir delay ile “loading” hissi
+            setTimeout(() => {                
+                simulateRoomsAndRender();
+                resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                runBtn.disabled = false;
+                runBtnInner.textContent = 'Tüm Odalar İçin Hesapla';
+            }, 500);
+        });
+
+        // Initialize simulation on page load
+        simulateRoomsAndRender();
+
+    </script>
+</body>
+</html>

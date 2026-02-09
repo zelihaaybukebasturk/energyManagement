@@ -1,0 +1,52 @@
+{
+  "title": "Energy Efficiency Standards and Guidelines",
+  "sources": [
+    "ASHRAE Standard 90.1",
+    "ISO 50001 Energy Management",
+    "EU Energy Performance of Buildings Directive"
+  ],
+  "key_principles": [
+    "Energy consumption should be normalized by building area and occupancy",
+    "Building type significantly influences energy intensity benchmarks",
+    "Climate factors (heating/cooling degree days) affect energy consumption",
+    "Regular monitoring and benchmarking are essential for continuous improvement"
+  ],
+  "building_type_considerations": {
+    "school": {
+      "typical_usage": "Daytime operation, seasonal variations",
+      "major_consumers": ["HVAC", "Lighting", "IT equipment"],
+      "occupancy_patterns": "High during school hours, low during breaks"
+    },
+    "university": {
+      "typical_usage": "Extended hours, year-round operation",
+      "major_consumers": ["HVAC", "Laboratory equipment", "IT infrastructure"],
+      "occupancy_patterns": "Variable by semester, 24/7 in some areas"
+    },
+    "hotel": {
+      "typical_usage": "24/7 operation, guest comfort critical",
+      "major_consumers": ["HVAC", "Hot water", "Lighting"],
+      "occupancy_patterns": "Variable by season, continuous operation"
+    },
+    "residential": {
+      "typical_usage": "Continuous occupancy",
+      "major_consumers": ["Space heating/cooling", "Hot water", "Appliances"],
+      "occupancy_patterns": "Consistent daily patterns"
+    },
+    "office": {
+      "typical_usage": "Business hours, some extended operation",
+      "major_consumers": ["HVAC", "Lighting", "IT equipment"],
+      "occupancy_patterns": "Peak during business hours"
+    },
+    "hospital": {
+      "typical_usage": "24/7 critical operation",
+      "major_consumers": ["HVAC", "Medical equipment", "Hot water", "Lighting"],
+      "occupancy_patterns": "Continuous, high energy demand"
+    }
+  },
+  "efficiency_classification": {
+    "efficient": "Meets or exceeds best practice benchmarks",
+    "moderately_efficient": "Meets minimum standards, room for improvement",
+    "inefficient": "Exceeds acceptable thresholds, requires immediate attention"
+  }
+}
+

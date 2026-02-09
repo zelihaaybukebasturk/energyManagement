@@ -1,0 +1,70 @@
+{
+  "title": "HVAC System Best Practices for Energy Efficiency",
+  "overview": "Heating, Ventilation, and Air Conditioning systems typically account for 40-60% of building energy consumption.",
+  "optimization_strategies": [
+    {
+      "category": "System Scheduling",
+      "practices": [
+        "Implement occupancy-based scheduling",
+        "Use setback temperatures during unoccupied hours",
+        "Optimize start/stop times based on building thermal mass",
+        "Schedule ventilation based on actual occupancy"
+      ],
+      "potential_savings": "15-25%"
+    },
+    {
+      "category": "Equipment Efficiency",
+      "practices": [
+        "Upgrade to high-efficiency HVAC equipment (SEER 16+ for cooling, AFUE 90+ for heating)",
+        "Replace old chillers and boilers with modern efficient models",
+        "Install variable frequency drives (VFDs) on pumps and fans",
+        "Use energy recovery ventilation (ERV) systems"
+      ],
+      "potential_savings": "20-35%"
+    },
+    {
+      "category": "Controls and Automation",
+      "practices": [
+        "Install programmable thermostats and zone controls",
+        "Implement building automation systems (BAS)",
+        "Use demand-controlled ventilation",
+        "Optimize setpoints based on outdoor conditions"
+      ],
+      "potential_savings": "10-20%"
+    },
+    {
+      "category": "Maintenance",
+      "practices": [
+        "Regular filter replacement",
+        "Coil cleaning and maintenance",
+        "Duct sealing and insulation",
+        "Regular system tune-ups and calibration"
+      ],
+      "potential_savings": "5-15%"
+    }
+  ],
+  "building_type_specific": {
+    "school": {
+      "recommendations": [
+        "Schedule HVAC shutdown during school breaks",
+        "Use night setback for unoccupied periods",
+        "Implement zone controls for different building areas"
+      ]
+    },
+    "university": {
+      "recommendations": [
+        "Differentiate HVAC schedules for classrooms vs. labs vs. offices",
+        "Consider 24/7 operation only where necessary",
+        "Implement demand-controlled ventilation in lecture halls"
+      ]
+    },
+    "hotel": {
+      "recommendations": [
+        "Guest room HVAC controls",
+        "Optimize common area HVAC schedules",
+        "Use energy recovery in high-occupancy areas"
+      ]
+    }
+  }
+}
+
